@@ -26,7 +26,7 @@ const detailsView = (req, res) => {
     
     postService.getPostById(postId)
         .then(post => {
-            console.log(post);
+            // console.log(post);
             res.render('post/details', {...post});
         })
         .catch(err => {
@@ -42,9 +42,35 @@ const editView = (req, res) => {
         })
 };
 
+const editPost = (req, res) => {
+    let userInput = req.body;
+    let postId = req.params.id;
+
+    postService.editPost(userInput, postId)
+        .then(post => {
+            post.save();
+            res.redirect(`/posts/${postId}`);
+        })
+        .catch(err => {
+            console.log('Post Controller Edit Post Error: ', err.message);
+        })
+};
+
+const deletePost = (req, res) => {
+    let postId = req.params.id;
+    postService.deletePost(postId)
+        .then( () => {
+            res.redirect('/library');
+        })
+};
+
+
+
 router.get('/create', createView);
 router.post('/create', createPost);
 router.get('/:id', detailsView);
 router.get('/:id/edit', editView);
+router.post('/:id/edit', editPost);
+router.get('/:id/delete', deletePost);
 
 module.exports = router;

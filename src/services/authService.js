@@ -26,7 +26,6 @@ const register = (userInput) => {
 const login = (userInput) => {
     return findByEmail(userInput.email)
         .then(user => {
-            console.log(user);
             if (!user) {
                 throw new Error ('Incorrect username or password');
             }

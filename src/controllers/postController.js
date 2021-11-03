@@ -16,13 +16,26 @@ const createPost = (req, res) => {
             res.redirect('/library');
         })
         .catch(err => {
-            console.log('Post Controller Error: ', err.message);
+            console.log('Post Controller Create Post Error: ', err.message);
         })
     
+};
+
+const detailsView = (req, res) => {
+    let postId = req.params.id;
+    
+    postService.getPostById(postId)
+        .then(post => {
+            res.render('post/details', {...post});
+        })
+        .catch(err => {
+            console.log('Post Controller Details Page Error', err.message);
+        });
 };
 
 
 router.get('/create', createView);
 router.post('/create', createPost);
+router.get('/:id', detailsView);
 
 module.exports = router;

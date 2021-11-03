@@ -7,7 +7,8 @@ const createPost = (userInput) => {
 }
 
 const getPostById = (id) => {
-    return Post.findById(id).populate('author').lean();
+    // ! Check if the double populatetion is working, when I want to get the voteres data and display it. 
+    return Post.findById(id).populate('author').populate('votes').lean();
 }
 
 

@@ -26,6 +26,7 @@ const detailsView = (req, res) => {
     
     postService.getPostById(postId)
         .then(post => {
+            console.log(post);
             res.render('post/details', {...post});
         })
         .catch(err => {
@@ -33,9 +34,17 @@ const detailsView = (req, res) => {
         });
 };
 
+const editView = (req, res) => {
+    let postId = req.params.id;
+    postService.getPostById(postId)
+        .then(post => {
+            res.render('post/edit', {...post});
+        })
+};
 
 router.get('/create', createView);
 router.post('/create', createPost);
 router.get('/:id', detailsView);
+router.get('/:id/edit', editView);
 
 module.exports = router;

@@ -14,6 +14,15 @@ const deletePost = (postId) => {
     return Post.findByIdAndDelete(postId);
 }
 
+const upVotePost = (postId, userId) => {
+    return Post.findById(postId)
+        .then(post => {
+            post.votes.push(userId);
+            post.rating += 1;
+            return post.save();
+            
+        });
+}
 
 const getPostById = (id) => {
     // ! Check if the double populatetion is working, when I want to get the voteres data and display it. 
@@ -30,6 +39,7 @@ const postService = {
     getPostById,
     editPost,
     deletePost,
+    upVotePost,
 };
 
 module.exports = postService;

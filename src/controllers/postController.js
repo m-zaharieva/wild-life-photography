@@ -62,8 +62,25 @@ const deletePost = (req, res) => {
         .then( () => {
             res.redirect('/library');
         })
+        .catch(err => {
+            // TODO: Error handler
+            console.log('Post Controller Delete post Error: ', err.message);
+        })
 };
 
+const upVotePost = (req, res) => {
+    let postId = req.params.id;
+    let userId = req.user._id;
+    
+    postService.upVotePost(postId, userId)
+        .then(post => {
+            res.redirect(`/posts/${postId}`);
+        })
+        .catch(err => {
+            console.log('Post Controller Upvote Error: ', err.message);
+        })
+
+};
 
 
 router.get('/create', createView);
@@ -72,5 +89,6 @@ router.get('/:id', detailsView);
 router.get('/:id/edit', editView);
 router.post('/:id/edit', editPost);
 router.get('/:id/delete', deletePost);
+router.get('/:id/upVote', upVotePost);
 
 module.exports = router;

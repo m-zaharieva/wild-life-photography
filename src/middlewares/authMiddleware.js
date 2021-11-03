@@ -9,7 +9,7 @@ exports.authMiddleware = (req, res, next) => {
     
     return jwtVerify(token, TOKEN_SECRET)
         .then(user => {
-            res.user = user;
+            req.user = user;
             res.locals.user = user;
             next();
         });

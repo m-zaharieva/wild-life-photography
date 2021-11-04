@@ -17,6 +17,9 @@ const deletePost = (postId) => {
 const upVotePost = (postId, userId) => {
     return Post.findById(postId)
         .then(post => {
+            if(post.votes.includes(userId)) {
+                return post.save();
+            }
             post.votes.push(userId);
             post.rating += 1;
             return post.save();
@@ -24,8 +27,19 @@ const upVotePost = (postId, userId) => {
         });
 }
 
-const getPostById = (id) => {
-    // ! Check if the double populatetion is working, when I want to get the voteres data and display it. 
+const downVotePost = (postId, userId) => {
+    return Post.findById(postId)
+        .then(post => {
+            if(post.votes.includes(userId)) {
+                return post.save();
+            }
+            post.votes.push(userId);
+            post.rating -= 1;
+            return post.save();
+        });
+}
+
+const detailsPost = (id) => {
     return Post.findById(id).populate('author').populate('votes').lean();
 }
 
@@ -36,10 +50,11 @@ const getPostById = (id) => {
 
 const postService = {
     createPost,
-    getPostById,
+    detailsPost,
     editPost,
     deletePost,
     upVotePost,
+    downVotePost,
 };
 
 module.exports = postService;

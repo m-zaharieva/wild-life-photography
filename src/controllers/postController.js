@@ -3,6 +3,8 @@ const router = require('express').Router();
 const postService = require('./../services/postService.js');
 
 
+
+
 const createView = (req, res) => {
     res.render('post/create');
 };
@@ -24,10 +26,10 @@ const createPost = (req, res) => {
 const detailsView = (req, res) => {
     let postId = req.params.id;
     
-    postService.getPostById(postId)
+    postService.detailsPost(postId)
         .then(post => {
-            // console.log(post);
-            res.render('post/details', {...post});
+            let votes = post.votes.map(x => x = x.email).join(', ');
+            res.render('post/details', {...post, votes});
         })
         .catch(err => {
             console.log('Post Controller Details Page Error', err.message);
@@ -36,7 +38,7 @@ const detailsView = (req, res) => {
 
 const editView = (req, res) => {
     let postId = req.params.id;
-    postService.getPostById(postId)
+    postService.detailsPost(postId)
         .then(post => {
             res.render('post/edit', {...post});
         })
@@ -77,10 +79,27 @@ const upVotePost = (req, res) => {
             res.redirect(`/posts/${postId}`);
         })
         .catch(err => {
+            // TODO: Error handler.
             console.log('Post Controller Upvote Error: ', err.message);
+        });
+};
+
+const downVotePost = (req, res) => {
+    let postId = req.params.id;
+    let userId = req.user._id;
+
+    postService.downVotePost(postId, userId)
+        .then(post => {
+            res.redirect(`/posts/${postId}`);
         })
+        .catch(err => {
+            // TODO: Error handler.
+            console.log('Post Controller Downvote Error: ', err.message);
+        });
 
 };
+
+
 
 
 router.get('/create', createView);
@@ -90,5 +109,6 @@ router.get('/:id/edit', editView);
 router.post('/:id/edit', editPost);
 router.get('/:id/delete', deletePost);
 router.get('/:id/upVote', upVotePost);
+router.get('/:id/downVote', downVotePost);
 
 module.exports = router;
